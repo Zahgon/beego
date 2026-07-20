@@ -1,24 +1,6 @@
-// Copyright 2014 beego Author. All Rights Reserved.
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//      http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
 package logs
 
 import (
-	"bytes"
-	"encoding/json"
-	"fmt"
-	"strings"
 	"time"
 )
 
@@ -28,7 +10,6 @@ const (
 	jsonFormat          = "JSON_FORMAT"
 )
 
-// AccessLogRecord is astruct for holding access log data.
 type AccessLogRecord struct {
 	RemoteAddr     string        `json:"remote_addr"`
 	RequestTime    time.Time     `json:"request_time"`
@@ -44,50 +25,10 @@ type AccessLogRecord struct {
 	RemoteUser     string        `json:"remote_user"`
 }
 
-func (r *AccessLogRecord) json() ([]byte, error) {
-	buffer := &bytes.Buffer{}
-	encoder := json.NewEncoder(buffer)
-	disableEscapeHTML(encoder)
+func (r *AccessLogRecord) json() ([]byte, error) { _ = "STUB: not implemented"; return nil, nil }
 
-	err := encoder.Encode(r)
-	return buffer.Bytes(), err
-}
+func disableEscapeHTML(i interface{}) { _ = "STUB: not implemented"; return }
 
-func disableEscapeHTML(i interface{}) {
-	if e, ok := i.(interface {
-		SetEscapeHTML(bool)
-	}); ok {
-		e.SetEscapeHTML(false)
-	}
-}
+func AccessLog(r *AccessLogRecord, format string) { _ = "STUB: not implemented"; return }
 
-// AccessLog - Format and print access log.
-func AccessLog(r *AccessLogRecord, format string) {
-	msg := r.format(format)
-	lm := &LogMsg{
-		Msg:   strings.TrimSpace(msg),
-		When:  time.Now(),
-		Level: levelLoggerImpl,
-	}
-	beeLogger.writeMsg(lm)
-}
-
-func (r *AccessLogRecord) format(format string) string {
-	msg := ""
-	switch format {
-	case apacheFormat:
-		timeFormatted := r.RequestTime.Format("02/Jan/2006 03:04:05")
-		msg = fmt.Sprintf(apacheFormatPattern, r.RemoteAddr, timeFormatted, r.Request, r.Status, r.BodyBytesSent,
-			r.ElapsedTime.Seconds(), r.HTTPReferrer, r.HTTPUserAgent)
-	case jsonFormat:
-		fallthrough
-	default:
-		jsonData, err := r.json()
-		if err != nil {
-			msg = fmt.Sprintf(`{"Error": "%s"}`, err)
-		} else {
-			msg = string(jsonData)
-		}
-	}
-	return msg
-}
+func (r *AccessLogRecord) format(format string) string { _ = "STUB: not implemented"; return "" }

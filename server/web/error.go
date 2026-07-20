@@ -1,30 +1,9 @@
-// Copyright 2014 beego Author. All Rights Reserved.
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//      http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
 package web
 
 import (
-	"fmt"
-	"html/template"
 	"net/http"
 	"reflect"
-	"runtime"
-	"strconv"
-	"strings"
 
-	"github.com/beego/beego/v2"
-	"github.com/beego/beego/v2/core/utils"
 	"github.com/beego/beego/v2/server/web/context"
 )
 
@@ -82,19 +61,9 @@ var tpl = `
 </html>
 `
 
-// render default application error page with error and stack string.
 func showErr(err interface{}, ctx *context.Context, stack string) {
-	t, _ := template.New("beegoerrortemp").Parse(tpl)
-	data := map[string]string{
-		"AppError":      fmt.Sprintf("%s:%v", BConfig.AppName, err),
-		"RequestMethod": ctx.Input.Method(),
-		"RequestURL":    ctx.Input.URI(),
-		"RemoteAddr":    ctx.Input.IP(),
-		"Stack":         stack,
-		"BeegoVersion":  beego.VERSION,
-		"GoVersion":     runtime.Version(),
-	}
-	t.Execute(ctx.ResponseWriter, data)
+	_ = "STUB: not implemented"
+	return
 }
 
 var errtpl = `
@@ -204,288 +173,54 @@ type errorInfo struct {
 	errorType      int
 }
 
-// ErrorMaps holds map of http handlers for each error string.
-// there is 10 kinds default error(40x and 50x)
 var ErrorMaps = make(map[string]*errorInfo, 10)
 
-// show 401 unauthorized error.
-func unauthorized(rw http.ResponseWriter, r *http.Request) {
-	responseError(rw, r,
-		401,
-		"<br>The page you have requested can't be authorized."+
-			"<br>Perhaps you are here because:"+
-			"<br><br><ul>"+
-			"<br>The credentials you supplied are incorrect"+
-			"<br>There are errors in the website address"+
-			"</ul>",
-	)
-}
+func unauthorized(rw http.ResponseWriter, r *http.Request) { _ = "STUB: not implemented"; return }
 
-// show 402 Payment Required
-func paymentRequired(rw http.ResponseWriter, r *http.Request) {
-	responseError(rw, r,
-		402,
-		"<br>The page you have requested Payment Required."+
-			"<br>Perhaps you are here because:"+
-			"<br><br><ul>"+
-			"<br>The credentials you supplied are incorrect"+
-			"<br>There are errors in the website address"+
-			"</ul>",
-	)
-}
+func paymentRequired(rw http.ResponseWriter, r *http.Request) { _ = "STUB: not implemented"; return }
 
-// show 403 forbidden error.
-func forbidden(rw http.ResponseWriter, r *http.Request) {
-	responseError(rw, r,
-		403,
-		"<br>The page you have requested is forbidden."+
-			"<br>Perhaps you are here because:"+
-			"<br><br><ul>"+
-			"<br>Your address may be blocked"+
-			"<br>The site may be disabled"+
-			"<br>You need to log in"+
-			"</ul>",
-	)
-}
+func forbidden(rw http.ResponseWriter, r *http.Request) { _ = "STUB: not implemented"; return }
 
-// show 422 missing xsrf token
-func missingxsrf(rw http.ResponseWriter, r *http.Request) {
-	responseError(rw, r,
-		422,
-		"<br>The page you have requested is forbidden."+
-			"<br>Perhaps you are here because:"+
-			"<br><br><ul>"+
-			"<br>'_xsrf' argument missing from POST"+
-			"</ul>",
-	)
-}
+func missingxsrf(rw http.ResponseWriter, r *http.Request) { _ = "STUB: not implemented"; return }
 
-// show 417 invalid xsrf token
-func invalidxsrf(rw http.ResponseWriter, r *http.Request) {
-	responseError(rw, r,
-		417,
-		"<br>The page you have requested is forbidden."+
-			"<br>Perhaps you are here because:"+
-			"<br><br><ul>"+
-			"<br>expected XSRF not found"+
-			"</ul>",
-	)
-}
+func invalidxsrf(rw http.ResponseWriter, r *http.Request) { _ = "STUB: not implemented"; return }
 
-// show 404 not found error.
-func notFound(rw http.ResponseWriter, r *http.Request) {
-	responseError(rw, r,
-		404,
-		"<br>The page you have requested has flown the coop."+
-			"<br>Perhaps you are here because:"+
-			"<br><br><ul>"+
-			"<br>The page has moved"+
-			"<br>The page no longer exists"+
-			"<br>You were looking for your puppy and got lost"+
-			"<br>You like 404 pages"+
-			"</ul>",
-	)
-}
+func notFound(rw http.ResponseWriter, r *http.Request) { _ = "STUB: not implemented"; return }
 
-// show 405 Method Not Allowed
-func methodNotAllowed(rw http.ResponseWriter, r *http.Request) {
-	responseError(rw, r,
-		405,
-		"<br>The method you have requested Not Allowed."+
-			"<br>Perhaps you are here because:"+
-			"<br><br><ul>"+
-			"<br>The method specified in the Request-Line is not allowed for the resource identified by the Request-URI"+
-			"<br>The response MUST include an Allow header containing a list of valid methods for the requested resource."+
-			"</ul>",
-	)
-}
+func methodNotAllowed(rw http.ResponseWriter, r *http.Request) { _ = "STUB: not implemented"; return }
 
-// show 500 internal server error.
 func internalServerError(rw http.ResponseWriter, r *http.Request) {
-	responseError(rw, r,
-		500,
-		"<br>The page you have requested is down right now."+
-			"<br><br><ul>"+
-			"<br>Please try again later and report the error to the website administrator"+
-			"<br></ul>",
-	)
+	_ = "STUB: not implemented"
+	return
 }
 
-// show 501 Not Implemented.
-func notImplemented(rw http.ResponseWriter, r *http.Request) {
-	responseError(rw, r,
-		501,
-		"<br>The page you have requested is Not Implemented."+
-			"<br><br><ul>"+
-			"<br>Please try again later and report the error to the website administrator"+
-			"<br></ul>",
-	)
-}
+func notImplemented(rw http.ResponseWriter, r *http.Request) { _ = "STUB: not implemented"; return }
 
-// show 502 Bad Gateway.
-func badGateway(rw http.ResponseWriter, r *http.Request) {
-	responseError(rw, r,
-		502,
-		"<br>The page you have requested is down right now."+
-			"<br><br><ul>"+
-			"<br>The server, while acting as a gateway or proxy, received an invalid response from the upstream server it accessed in attempting to fulfill the request."+
-			"<br>Please try again later and report the error to the website administrator"+
-			"<br></ul>",
-	)
-}
+func badGateway(rw http.ResponseWriter, r *http.Request) { _ = "STUB: not implemented"; return }
 
-// show 503 service unavailable error.
-func serviceUnavailable(rw http.ResponseWriter, r *http.Request) {
-	responseError(rw, r,
-		503,
-		"<br>The page you have requested is unavailable."+
-			"<br>Perhaps you are here because:"+
-			"<br><br><ul>"+
-			"<br><br>The page is overloaded"+
-			"<br>Please try again later."+
-			"</ul>",
-	)
-}
+func serviceUnavailable(rw http.ResponseWriter, r *http.Request) { _ = "STUB: not implemented"; return }
 
-// show 504 Gateway Timeout.
-func gatewayTimeout(rw http.ResponseWriter, r *http.Request) {
-	responseError(rw, r,
-		504,
-		"<br>The page you have requested is unavailable"+
-			"<br>Perhaps you are here because:"+
-			"<br><br><ul>"+
-			"<br><br>The server, while acting as a gateway or proxy, did not receive a timely response from the upstream server specified by the URI."+
-			"<br>Please try again later."+
-			"</ul>",
-	)
-}
+func gatewayTimeout(rw http.ResponseWriter, r *http.Request) { _ = "STUB: not implemented"; return }
 
-// show 413 Payload Too Large
-func payloadTooLarge(rw http.ResponseWriter, r *http.Request) {
-	responseError(rw, r,
-		413,
-		`<br>The page you have requested is unavailable.
-		 <br>Perhaps you are here because:<br><br>
-		 <ul>
-			<br>The request entity is larger than limits defined by server.
-			<br>Please change the request entity and try again.
-		 </ul>
-		`,
-	)
-}
+func payloadTooLarge(rw http.ResponseWriter, r *http.Request) { _ = "STUB: not implemented"; return }
 
 func responseError(rw http.ResponseWriter, r *http.Request, errCode int, errContent string) {
-	t, _ := template.New("beegoerrortemp").Parse(errtpl)
-	data := M{
-		"Title":        http.StatusText(errCode),
-		"BeegoVersion": beego.VERSION,
-		"Content":      template.HTML(errContent),
-	}
-	t.Execute(rw, data)
+	_ = "STUB: not implemented"
+	return
 }
 
-// ErrorHandler registers http.HandlerFunc to each http err code string.
-// usage:
-//
-//	beego.ErrorHandler("404",NotFound)
-//	beego.ErrorHandler("500",InternalServerError)
 func ErrorHandler(code string, h http.HandlerFunc) *HttpServer {
-	ErrorMaps[code] = &errorInfo{
-		errorType: errorTypeHandler,
-		handler:   h,
-		method:    code,
-	}
-	return BeeApp
+	_ = "STUB: not implemented"
+	return nil
 }
 
-// ErrorController registers ControllerInterface to each http err code string.
-// usage:
-//
-//	beego.ErrorController(&controllers.ErrorController{})
-func ErrorController(c ControllerInterface) *HttpServer {
-	reflectVal := reflect.ValueOf(c)
-	rt := reflectVal.Type()
-	ct := reflect.Indirect(reflectVal).Type()
-	for i := 0; i < rt.NumMethod(); i++ {
-		methodName := rt.Method(i).Name
-		if !utils.InSlice(methodName, exceptMethod) && strings.HasPrefix(methodName, "Error") {
-			errName := strings.TrimPrefix(methodName, "Error")
-			ErrorMaps[errName] = &errorInfo{
-				errorType:      errorTypeController,
-				controllerType: ct,
-				method:         methodName,
-			}
-		}
-	}
-	return BeeApp
-}
+func ErrorController(c ControllerInterface) *HttpServer { _ = "STUB: not implemented"; return nil }
 
-// Exception Write HttpStatus with errCode and Exec error handler if exist.
-func Exception(errCode uint64, ctx *context.Context) {
-	exception(strconv.FormatUint(errCode, 10), ctx)
-}
+func Exception(errCode uint64, ctx *context.Context) { _ = "STUB: not implemented"; return }
 
-// show error string as simple text message.
-// if error string is empty, show 503 or 500 error as default.
-func exception(errCode string, ctx *context.Context) {
-	atoi := func(code string) int {
-		v, err := strconv.Atoi(code)
-		if err == nil {
-			return v
-		}
-		if ctx.Output.Status == 0 {
-			return 503
-		}
-		return ctx.Output.Status
-	}
-
-	for _, ec := range []string{errCode, "503", "500"} {
-		if h, ok := ErrorMaps[ec]; ok {
-			executeError(h, ctx, atoi(ec))
-			return
-		}
-	}
-	// if 50x error has been removed from errorMap
-	ctx.ResponseWriter.WriteHeader(atoi(errCode))
-	ctx.WriteString(errCode)
-}
+func exception(errCode string, ctx *context.Context) { _ = "STUB: not implemented"; return }
 
 func executeError(err *errorInfo, ctx *context.Context, code int) {
-	// make sure to log the error in the access log
-	LogAccess(ctx, nil, code)
-
-	if err.errorType == errorTypeHandler {
-		ctx.ResponseWriter.WriteHeader(code)
-		err.handler(ctx.ResponseWriter, ctx.Request)
-		return
-	}
-	if err.errorType == errorTypeController {
-		ctx.Output.SetStatus(code)
-		// Invoke the request handler
-		vc := reflect.New(err.controllerType)
-		execController, ok := vc.Interface().(ControllerInterface)
-		if !ok {
-			panic("controller is not ControllerInterface")
-		}
-		// call the controller init function
-		execController.Init(ctx, err.controllerType.Name(), err.method, vc.Interface())
-
-		// call prepare function
-		execController.Prepare()
-
-		execController.URLMapping()
-
-		method := vc.MethodByName(err.method)
-		method.Call([]reflect.Value{})
-
-		// render template
-		if BConfig.WebConfig.AutoRender {
-			if err := execController.Render(); err != nil {
-				panic(err)
-			}
-		}
-
-		// finish all runrouter. release resource
-		execController.Finish()
-	}
+	_ = "STUB: not implemented"
+	return
 }

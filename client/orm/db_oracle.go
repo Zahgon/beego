@@ -1,30 +1,11 @@
-// Copyright 2014 beego Author. All Rights Reserved.
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//      http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
 package orm
 
 import (
 	"context"
-	"fmt"
-	"strings"
 
 	"github.com/beego/beego/v2/client/orm/internal/models"
-
-	"github.com/beego/beego/v2/client/orm/hints"
 )
 
-// oracle operators.
 var oracleOperators = map[string]string{
 	"exact":       "= ?",
 	"gt":          "> ?",
@@ -34,7 +15,6 @@ var oracleOperators = map[string]string{
 	"//iendswith": "LIKE ?",
 }
 
-// oracle column field types.
 var oracleTypes = map[string]string{
 	"pk":                  "NOT NULL PRIMARY KEY",
 	"bool":                "bool",
@@ -56,118 +36,33 @@ var oracleTypes = map[string]string{
 	"time.Time-precision": "TIMESTAMP(%d)",
 }
 
-// oracle dbBaser
 type dbBaseOracle struct {
 	dbBase
 }
 
 var _ dbBaser = new(dbBaseOracle)
 
-// create oracle dbBaser.
-func newdbBaseOracle() dbBaser {
-	b := new(dbBaseOracle)
-	b.ins = b
-	return b
-}
+func newdbBaseOracle() dbBaser { _ = "STUB: not implemented"; return *new(dbBaser) }
 
-// OperatorSQL Get oracle operator.
-func (d *dbBaseOracle) OperatorSQL(operator string) string {
-	return oracleOperators[operator]
-}
+func (d *dbBaseOracle) OperatorSQL(operator string) string { _ = "STUB: not implemented"; return "" }
 
-// DbTypes Get oracle table field types.
-func (d *dbBaseOracle) DbTypes() map[string]string {
-	return oracleTypes
-}
+func (d *dbBaseOracle) DbTypes() map[string]string { _ = "STUB: not implemented"; return nil }
 
-// ShowTablesQuery show All the tables in database
-func (d *dbBaseOracle) ShowTablesQuery() string {
-	return "SELECT TABLE_NAME FROM USER_TABLES"
-}
+func (d *dbBaseOracle) ShowTablesQuery() string { _ = "STUB: not implemented"; return "" }
 
-// Oracle
-func (d *dbBaseOracle) ShowColumnsQuery(table string) string {
-	return fmt.Sprintf("SELECT COLUMN_NAME, DATA_TYPE, NULLABLE FROM ALL_TAB_COLUMNS "+
-		"WHERE TABLE_NAME ='%s'", strings.ToUpper(table))
-}
+func (d *dbBaseOracle) ShowColumnsQuery(table string) string { _ = "STUB: not implemented"; return "" }
 
-// check index is exist
 func (d *dbBaseOracle) IndexExists(ctx context.Context, db dbQuerier, table string, name string) bool {
-	row := db.QueryRowContext(ctx, "SELECT COUNT(*) FROM USER_IND_COLUMNS, USER_INDEXES "+
-		"WHERE USER_IND_COLUMNS.INDEX_NAME = USER_INDEXES.INDEX_NAME "+
-		"AND  USER_IND_COLUMNS.TABLE_NAME = ? AND USER_IND_COLUMNS.INDEX_NAME = ?", strings.ToUpper(table), strings.ToUpper(name))
-
-	var cnt int
-	row.Scan(&cnt)
-	return cnt > 0
+	_ = "STUB: not implemented"
+	return false
 }
 
 func (d *dbBaseOracle) GenerateSpecifyIndex(tableName string, useIndex int, indexes []string) string {
-	var s []string
-	Q := d.TableQuote()
-	for _, index := range indexes {
-		tmp := fmt.Sprintf(`%s%s%s`, Q, index, Q)
-		s = append(s, tmp)
-	}
-
-	var hint string
-
-	switch useIndex {
-	case hints.KeyUseIndex, hints.KeyForceIndex:
-		hint = `INDEX`
-	case hints.KeyIgnoreIndex:
-		hint = `NO_INDEX`
-	default:
-		DebugLog.Println("[WARN] Not a valid specifying action, so that action is ignored")
-		return ``
-	}
-
-	return fmt.Sprintf(` /*+ %s(%s %s)*/ `, hint, tableName, strings.Join(s, `,`))
+	_ = "STUB: not implemented"
+	return ""
 }
 
-// InsertValue execute insert sql with given struct and given values.
-// insert the given values, not the field values in struct.
 func (d *dbBaseOracle) InsertValue(ctx context.Context, q dbQuerier, mi *models.ModelInfo, isMulti bool, names []string, values []interface{}) (int64, error) {
-	Q := d.ins.TableQuote()
-
-	marks := make([]string, len(names))
-	for i := range marks {
-		marks[i] = ":" + names[i]
-	}
-
-	sep := fmt.Sprintf("%s, %s", Q, Q)
-	qmarks := strings.Join(marks, ", ")
-	columns := strings.Join(names, sep)
-
-	multi := len(values) / len(names)
-
-	if isMulti {
-		qmarks = strings.Repeat(qmarks+"), (", multi-1) + qmarks
-	}
-
-	query := fmt.Sprintf("INSERT INTO %s%s%s (%s%s%s) VALUES (%s)", Q, mi.Table, Q, Q, columns, Q, qmarks)
-
-	d.ins.ReplaceMarks(&query)
-
-	if isMulti || !d.ins.HasReturningID(mi, &query) {
-		res, err := q.ExecContext(ctx, query, values...)
-		if err == nil {
-			if isMulti {
-				return res.RowsAffected()
-			}
-
-			lastInsertId, err := res.LastInsertId()
-			if err != nil {
-				DebugLog.Println(ErrLastInsertIdUnavailable, ':', err)
-				return lastInsertId, ErrLastInsertIdUnavailable
-			} else {
-				return lastInsertId, nil
-			}
-		}
-		return 0, err
-	}
-	row := q.QueryRowContext(ctx, query, values...)
-	var id int64
-	err := row.Scan(&id)
-	return id, err
+	_ = "STUB: not implemented"
+	return 0, nil
 }

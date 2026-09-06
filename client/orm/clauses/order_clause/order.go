@@ -1,11 +1,5 @@
 package order_clause
 
-import (
-	"strings"
-
-	"github.com/beego/beego/v2/client/orm/clauses"
-)
-
 type Sort int8
 
 const (
@@ -22,83 +16,26 @@ type Order struct {
 	isRaw  bool
 }
 
-func Clause(options ...Option) *Order {
-	o := &Order{}
-	for _, option := range options {
-		option(o)
-	}
+func Clause(options ...Option) *Order { _ = "STUB: not implemented"; return nil }
 
-	return o
-}
+func (o *Order) GetColumn() string { _ = "STUB: not implemented"; return "" }
 
-func (o *Order) GetColumn() string {
-	return o.column
-}
+func (o *Order) GetSort() Sort { _ = "STUB: not implemented"; return *new(Sort) }
 
-func (o *Order) GetSort() Sort {
-	return o.sort
-}
+func (o *Order) SortString() string { _ = "STUB: not implemented"; return "" }
 
-func (o *Order) SortString() string {
-	switch o.GetSort() {
-	case Ascending:
-		return "ASC"
-	case Descending:
-		return "DESC"
-	}
+func (o *Order) IsRaw() bool { _ = "STUB: not implemented"; return false }
 
-	return ``
-}
+func ParseOrder(expressions ...string) []*Order { _ = "STUB: not implemented"; return nil }
 
-func (o *Order) IsRaw() bool {
-	return o.isRaw
-}
+func Column(column string) Option { _ = "STUB: not implemented"; return *new(Option) }
 
-func ParseOrder(expressions ...string) []*Order {
-	var orders []*Order
-	for _, expression := range expressions {
-		sort := Ascending
-		column := strings.ReplaceAll(expression, clauses.ExprSep, clauses.ExprDot)
-		if column[0] == '-' {
-			sort = Descending
-			column = column[1:]
-		}
+func sort(sort Sort) Option { _ = "STUB: not implemented"; return *new(Option) }
 
-		orders = append(orders, &Order{
-			column: column,
-			sort:   sort,
-		})
-	}
+func SortAscending() Option { _ = "STUB: not implemented"; return *new(Option) }
 
-	return orders
-}
+func SortDescending() Option { _ = "STUB: not implemented"; return *new(Option) }
 
-func Column(column string) Option {
-	return func(order *Order) {
-		order.column = strings.ReplaceAll(column, clauses.ExprSep, clauses.ExprDot)
-	}
-}
+func SortNone() Option { _ = "STUB: not implemented"; return *new(Option) }
 
-func sort(sort Sort) Option {
-	return func(order *Order) {
-		order.sort = sort
-	}
-}
-
-func SortAscending() Option {
-	return sort(Ascending)
-}
-
-func SortDescending() Option {
-	return sort(Descending)
-}
-
-func SortNone() Option {
-	return sort(None)
-}
-
-func Raw() Option {
-	return func(order *Order) {
-		order.isRaw = true
-	}
-}
+func Raw() Option { _ = "STUB: not implemented"; return *new(Option) }

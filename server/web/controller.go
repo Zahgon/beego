@@ -1,33 +1,11 @@
-// Copyright 2014 beego Author. All Rights Reserved.
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//      http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
 package web
 
 import (
 	"bytes"
-	context2 "context"
 	"errors"
-	"fmt"
-	"html/template"
 	"io"
 	"mime/multipart"
-	"net/http"
 	"net/url"
-	"os"
-	"reflect"
-	"strconv"
-	"strings"
 	"sync"
 
 	"google.golang.org/protobuf/proto"
@@ -38,9 +16,8 @@ import (
 )
 
 var (
-	// ErrAbort custom error when user stop request handler manually.
 	ErrAbort = errors.New("user stop run")
-	// GlobalControllerRouter store comments with controller. pkgpath+controller:comments
+
 	GlobalControllerRouter = make(map[string][]ControllerComments)
 	copyBufferPool         sync.Pool
 )
@@ -57,7 +34,6 @@ func init() {
 	}
 }
 
-// ControllerFilter store the filter for controller
 type ControllerFilter struct {
 	Pattern        string
 	Pos            int
@@ -66,22 +42,19 @@ type ControllerFilter struct {
 	ResetParams    bool
 }
 
-// ControllerFilterComments store the comment for controller level filter
 type ControllerFilterComments struct {
 	Pattern        string
 	Pos            int
-	Filter         string // NOQA
+	Filter         string
 	ReturnOnOutput bool
 	ResetParams    bool
 }
 
-// ControllerImportComments store the import comment for controller needed
 type ControllerImportComments struct {
 	ImportPath  string
 	ImportAlias string
 }
 
-// ControllerComments store the comment for the controller method
 type ControllerComments struct {
 	Method           string
 	Router           string
@@ -93,47 +66,38 @@ type ControllerComments struct {
 	MethodParams     []*param.MethodParam
 }
 
-// ControllerCommentsSlice implements the sort interface
 type ControllerCommentsSlice []ControllerComments
 
-func (p ControllerCommentsSlice) Len() int { return len(p) }
+func (p ControllerCommentsSlice) Len() int { _ = "STUB: not implemented"; return 0 }
 
-func (p ControllerCommentsSlice) Less(i, j int) bool { return p[i].Router < p[j].Router }
+func (p ControllerCommentsSlice) Less(i, j int) bool { _ = "STUB: not implemented"; return false }
 
-func (p ControllerCommentsSlice) Swap(i, j int) { p[i], p[j] = p[j], p[i] }
+func (p ControllerCommentsSlice) Swap(i, j int) { _ = "STUB: not implemented"; return }
 
-// Controller defines some basic http request handler operations, such as
-// http context, template and view, session and xsrf.
 type Controller struct {
-	// context data
 	Ctx  *context.Context
 	Data map[interface{}]interface{}
 
-	// route controller info
 	controllerName string
 	actionName     string
 	methodMapping  map[string]func() //method:routertree
 	AppController  interface{}
 
-	// template data
 	TplName        string
 	ViewPath       string
 	Layout         string
-	LayoutSections map[string]string // the key is the section name and the value is the template name
+	LayoutSections map[string]string
 	TplPrefix      string
 	TplExt         string
 	EnableRender   bool
 
-	// xsrf data
 	EnableXSRF bool
 	_xsrfToken string
 	XSRFExpire int
 
-	// session
 	CruSession session.Store
 }
 
-// ControllerInterface is an interface to uniform all controller handler.
 type ControllerInterface interface {
 	Init(ct *context.Context, controllerName, actionName string, app interface{})
 	Prepare()
@@ -153,528 +117,180 @@ type ControllerInterface interface {
 	URLMapping()
 }
 
-// Init generates default values of controller operations.
 func (c *Controller) Init(ctx *context.Context, controllerName, actionName string, app interface{}) {
-	c.Layout = ""
-	c.TplName = ""
-	c.controllerName = controllerName
-	c.actionName = actionName
-	c.Ctx = ctx
-	c.TplExt = "tpl"
-	c.AppController = app
-	c.EnableRender = true
-	c.EnableXSRF = true
-	c.Data = ctx.Input.Data()
-	c.methodMapping = make(map[string]func())
+	_ = "STUB: not implemented"
+	return
 }
 
-// Prepare runs after Init before request function execution.
-func (c *Controller) Prepare() {}
+func (c *Controller) Prepare() { _ = "STUB: not implemented"; return }
 
-// Finish runs after request function execution.
-func (c *Controller) Finish() {}
+func (c *Controller) Finish() { _ = "STUB: not implemented"; return }
 
-// Get adds a request function to handle GET request.
-func (c *Controller) Get() {
-	http.Error(c.Ctx.ResponseWriter, "Method Not Allowed", http.StatusMethodNotAllowed)
-}
+func (c *Controller) Get() { _ = "STUB: not implemented"; return }
 
-// Post adds a request function to handle POST request.
-func (c *Controller) Post() {
-	http.Error(c.Ctx.ResponseWriter, "Method Not Allowed", http.StatusMethodNotAllowed)
-}
+func (c *Controller) Post() { _ = "STUB: not implemented"; return }
 
-// Delete adds a request function to handle DELETE request.
-func (c *Controller) Delete() {
-	http.Error(c.Ctx.ResponseWriter, "Method Not Allowed", http.StatusMethodNotAllowed)
-}
+func (c *Controller) Delete() { _ = "STUB: not implemented"; return }
 
-// Put adds a request function to handle PUT request.
-func (c *Controller) Put() {
-	http.Error(c.Ctx.ResponseWriter, "Method Not Allowed", http.StatusMethodNotAllowed)
-}
+func (c *Controller) Put() { _ = "STUB: not implemented"; return }
 
-// Head adds a request function to handle HEAD request.
-func (c *Controller) Head() {
-	http.Error(c.Ctx.ResponseWriter, "Method Not Allowed", http.StatusMethodNotAllowed)
-}
+func (c *Controller) Head() { _ = "STUB: not implemented"; return }
 
-// Patch adds a request function to handle PATCH request.
-func (c *Controller) Patch() {
-	http.Error(c.Ctx.ResponseWriter, "Method Not Allowed", http.StatusMethodNotAllowed)
-}
+func (c *Controller) Patch() { _ = "STUB: not implemented"; return }
 
-// Options adds a request function to handle OPTIONS request.
-func (c *Controller) Options() {
-	http.Error(c.Ctx.ResponseWriter, "Method Not Allowed", http.StatusMethodNotAllowed)
-}
+func (c *Controller) Options() { _ = "STUB: not implemented"; return }
 
-// Trace adds a request function to handle Trace request.
-// this method SHOULD NOT be overridden.
-// https://tools.ietf.org/html/rfc7231#section-4.3.8
-// The TRACE method requests a remote, application-level loop-back of
-// the request message.  The final recipient of the request SHOULD
-// reflect the message received, excluding some fields described below,
-// back to the client as the message body of a 200 (OK) response with a
-// Content-Type of "message/http" (Section 8.3.1 of [RFC7230]).
-func (c *Controller) Trace() {
-	ts := func(h http.Header) (hs string) {
-		for k, v := range h {
-			hs += fmt.Sprintf("\r\n%s: %s", k, v)
-		}
-		return
-	}
-	hs := fmt.Sprintf("\r\nTRACE %s %s%s\r\n", c.Ctx.Request.RequestURI, c.Ctx.Request.Proto, ts(c.Ctx.Request.Header))
-	c.Ctx.Output.Header("Content-Type", "message/http")
-	c.Ctx.Output.Header("Content-Length", fmt.Sprint(len(hs)))
-	c.Ctx.Output.Header("Cache-Control", "no-cache, no-store, must-revalidate")
-	c.Ctx.WriteString(hs)
-}
+func (c *Controller) Trace() { _ = "STUB: not implemented"; return }
 
-// HandlerFunc call function with the name
-func (c *Controller) HandlerFunc(fnname string) bool {
-	if v, ok := c.methodMapping[fnname]; ok {
-		v()
-		return true
-	}
-	return false
-}
+func (c *Controller) HandlerFunc(fnname string) bool { _ = "STUB: not implemented"; return false }
 
-// URLMapping register the internal Controller router.
-func (c *Controller) URLMapping() {}
+func (c *Controller) URLMapping() { _ = "STUB: not implemented"; return }
 
-// Bind if the content type is form, we read data from form
-// otherwise, read data from request body
-func (c *Controller) Bind(obj interface{}) error {
-	return c.Ctx.Bind(obj)
-}
+func (c *Controller) Bind(obj interface{}) error { _ = "STUB: not implemented"; return nil }
 
-// BindYAML only read data from http request body
-func (c *Controller) BindYAML(obj interface{}) error {
-	return c.Ctx.BindYAML(obj)
-}
+func (c *Controller) BindYAML(obj interface{}) error { _ = "STUB: not implemented"; return nil }
 
-// BindForm read data from form
-func (c *Controller) BindForm(obj interface{}) error {
-	return c.Ctx.BindForm(obj)
-}
+func (c *Controller) BindForm(obj interface{}) error { _ = "STUB: not implemented"; return nil }
 
-// BindJSON only read data from http request body
-func (c *Controller) BindJSON(obj interface{}) error {
-	return c.Ctx.BindJSON(obj)
-}
+func (c *Controller) BindJSON(obj interface{}) error { _ = "STUB: not implemented"; return nil }
 
-// BindProtobuf only read data from http request body
-func (c *Controller) BindProtobuf(obj proto.Message) error {
-	return c.Ctx.BindProtobuf(obj)
-}
+func (c *Controller) BindProtobuf(obj proto.Message) error { _ = "STUB: not implemented"; return nil }
 
-// BindXML only read data from http request body
-func (c *Controller) BindXML(obj interface{}) error {
-	return c.Ctx.BindXML(obj)
-}
+func (c *Controller) BindXML(obj interface{}) error { _ = "STUB: not implemented"; return nil }
 
-// Mapping the method to function
-func (c *Controller) Mapping(method string, fn func()) {
-	c.methodMapping[method] = fn
-}
+func (c *Controller) Mapping(method string, fn func()) { _ = "STUB: not implemented"; return }
 
-// Render sends the response with rendered template bytes as text/html type.
-func (c *Controller) Render() error {
-	if !c.EnableRender {
-		return nil
-	}
-	rb, err := c.RenderBytes()
-	if err != nil {
-		return err
-	}
+func (c *Controller) Render() error { _ = "STUB: not implemented"; return nil }
 
-	if c.Ctx.ResponseWriter.Header().Get("Content-Type") == "" {
-		c.Ctx.Output.Header("Content-Type", "text/html; charset=utf-8")
-	}
+func (c *Controller) RenderString() (string, error) { _ = "STUB: not implemented"; return "", nil }
 
-	return c.Ctx.Output.Body(rb)
-}
-
-// RenderString returns the rendered template string. Do not send out response.
-func (c *Controller) RenderString() (string, error) {
-	b, e := c.RenderBytes()
-	if e != nil {
-		return "", e
-	}
-	return string(b), e
-}
-
-// RenderBytes returns the bytes of rendered template string. Do not send out response.
-func (c *Controller) RenderBytes() ([]byte, error) {
-	buf, err := c.renderTemplate()
-	// if the controller has set layout, then first get the tplName's content set the content to the layout
-	if err == nil && c.Layout != "" {
-		c.Data["LayoutContent"] = template.HTML(buf.String())
-
-		if c.LayoutSections != nil {
-			for sectionName, sectionTpl := range c.LayoutSections {
-				if sectionTpl == "" {
-					c.Data[sectionName] = ""
-					continue
-				}
-				buf.Reset()
-				err = ExecuteViewPathTemplate(&buf, sectionTpl, c.viewPath(), c.Data)
-				if err != nil {
-					return nil, err
-				}
-				c.Data[sectionName] = template.HTML(buf.String())
-			}
-		}
-
-		buf.Reset()
-		err = ExecuteViewPathTemplate(&buf, c.Layout, c.viewPath(), c.Data)
-	}
-	return buf.Bytes(), err
-}
+func (c *Controller) RenderBytes() ([]byte, error) { _ = "STUB: not implemented"; return nil, nil }
 
 func (c *Controller) renderTemplate() (bytes.Buffer, error) {
-	var buf bytes.Buffer
-	if c.TplName == "" {
-		c.TplName = strings.ToLower(c.controllerName) + "/" + strings.ToLower(c.actionName) + "." + c.TplExt
-	}
-	if c.TplPrefix != "" {
-		c.TplName = c.TplPrefix + c.TplName
-	}
-	if BConfig.RunMode == DEV {
-		buildFiles := []string{c.TplName}
-		if c.Layout != "" {
-			buildFiles = append(buildFiles, c.Layout)
-			if c.LayoutSections != nil {
-				for _, sectionTpl := range c.LayoutSections {
-					if sectionTpl == "" {
-						continue
-					}
-					buildFiles = append(buildFiles, sectionTpl)
-				}
-			}
-		}
-		BuildTemplate(c.viewPath(), buildFiles...)
-	}
-	return buf, ExecuteViewPathTemplate(&buf, c.TplName, c.viewPath(), c.Data)
+	_ = "STUB: not implemented"
+	return *new(bytes.Buffer), nil
 }
 
-func (c *Controller) viewPath() string {
-	if c.ViewPath == "" {
-		return BConfig.WebConfig.ViewsPath
-	}
-	return c.ViewPath
-}
+func (c *Controller) viewPath() string { _ = "STUB: not implemented"; return "" }
 
-// Redirect sends the redirection response to url with status code.
-func (c *Controller) Redirect(url string, code int) {
-	LogAccess(c.Ctx, nil, code)
-	c.Ctx.Redirect(code, url)
-}
+func (c *Controller) Redirect(url string, code int) { _ = "STUB: not implemented"; return }
 
-// SetData set the data depending on the accepted
-func (c *Controller) SetData(data interface{}) {
-	accept := c.Ctx.Input.Header("Accept")
-	switch accept {
-	case context.ApplicationYAML:
-		c.Data["yaml"] = data
-	case context.ApplicationXML, context.TextXML:
-		c.Data["xml"] = data
-	default:
-		c.Data["json"] = data
-	}
-}
+func (c *Controller) SetData(data interface{}) { _ = "STUB: not implemented"; return }
 
-// Abort stops controller handler and show the error data if code is defined in ErrorMap or code string.
-func (c *Controller) Abort(code string) {
-	status, err := strconv.Atoi(code)
-	if err != nil {
-		status = 200
-	}
-	c.CustomAbort(status, code)
-}
+func (c *Controller) Abort(code string) { _ = "STUB: not implemented"; return }
 
-// CustomAbort stops controller handler and show the error data, it's similar Aborts, but support status code and body.
-func (c *Controller) CustomAbort(status int, body string) {
-	c.Ctx.Output.Status = status
-	// first panic from ErrorMaps, it is user defined error functions.
-	if _, ok := ErrorMaps[body]; ok {
-		panic(body)
-	}
-	// last panic user string
-	c.Ctx.ResponseWriter.WriteHeader(status)
-	c.Ctx.ResponseWriter.Write([]byte(body))
-	panic(ErrAbort)
-}
+func (c *Controller) CustomAbort(status int, body string) { _ = "STUB: not implemented"; return }
 
-// StopRun makes panic of USERSTOPRUN error and go to recover function if defined.
-func (c *Controller) StopRun() {
-	panic(ErrAbort)
-}
+func (c *Controller) StopRun() { _ = "STUB: not implemented"; return }
 
-// URLFor does another controller handler in this request function.
-// it goes to this controller method if endpoint is not clear.
 func (c *Controller) URLFor(endpoint string, values ...interface{}) string {
-	if len(endpoint) == 0 {
-		return ""
-	}
-	if endpoint[0] == '.' {
-		return URLFor(reflect.Indirect(reflect.ValueOf(c.AppController)).Type().Name()+endpoint, values...)
-	}
-	return URLFor(endpoint, values...)
-}
-
-func (c *Controller) JSONResp(data interface{}) error {
-	return c.Ctx.JSONResp(data)
-}
-
-func (c *Controller) XMLResp(data interface{}) error {
-	return c.Ctx.XMLResp(data)
-}
-
-func (c *Controller) YamlResp(data interface{}) error {
-	return c.Ctx.YamlResp(data)
-}
-
-// Resp sends response based on the Accept Header
-// By default response will be in JSON
-// it's different from ServeXXX methods
-// because we don't store the data to Data field
-func (c *Controller) Resp(data interface{}) error {
-	return c.Ctx.Resp(data)
-}
-
-// ServeJSON sends a json response with encoding charset.
-func (c *Controller) ServeJSON(encoding ...bool) error {
-	var (
-		hasIndent   = BConfig.RunMode != PROD
-		hasEncoding = len(encoding) > 0 && encoding[0]
-	)
-
-	return c.Ctx.Output.JSON(c.Data["json"], hasIndent, hasEncoding)
-}
-
-// ServeJSONP sends a jsonp response.
-func (c *Controller) ServeJSONP() error {
-	hasIndent := BConfig.RunMode != PROD
-	return c.Ctx.Output.JSONP(c.Data["jsonp"], hasIndent)
-}
-
-// ServeXML sends xml response.
-func (c *Controller) ServeXML() error {
-	hasIndent := BConfig.RunMode != PROD
-	return c.Ctx.Output.XML(c.Data["xml"], hasIndent)
-}
-
-// ServeYAML sends yaml response.
-func (c *Controller) ServeYAML() error {
-	return c.Ctx.Output.YAML(c.Data["yaml"])
-}
-
-// ServeFormatted serve YAML, XML OR JSON, depending on the value of the Accept header
-func (c *Controller) ServeFormatted(encoding ...bool) error {
-	hasIndent := BConfig.RunMode != PROD
-	hasEncoding := len(encoding) > 0 && encoding[0]
-	return c.Ctx.Output.ServeFormatted(c.Data, hasIndent, hasEncoding)
-}
-
-// Input returns the input data map from POST or PUT request body and query string.
-func (c *Controller) Input() (url.Values, error) {
-	if c.Ctx.Request.Form == nil {
-		err := c.Ctx.Request.ParseForm()
-		if err != nil {
-			return nil, err
-		}
-	}
-	return c.Ctx.Request.Form, nil
-}
-
-// ParseForm maps input data map to obj struct.
-func (c *Controller) ParseForm(obj interface{}) error {
-	return c.Ctx.BindForm(obj)
-}
-
-// GetString returns the input value by key string or the default value while it's present and input is blank
-func (c *Controller) GetString(key string, def ...string) string {
-	if v := c.Ctx.Input.Query(key); v != "" {
-		return v
-	}
-	if len(def) > 0 {
-		return def[0]
-	}
+	_ = "STUB: not implemented"
 	return ""
 }
 
-// GetStrings returns the input string slice by key string or the default value while it's present and input is blank
-// it's designed for multi-value input field such as checkbox(input[type=checkbox]), multi-selection.
+func (c *Controller) JSONResp(data interface{}) error { _ = "STUB: not implemented"; return nil }
+
+func (c *Controller) XMLResp(data interface{}) error { _ = "STUB: not implemented"; return nil }
+
+func (c *Controller) YamlResp(data interface{}) error { _ = "STUB: not implemented"; return nil }
+
+func (c *Controller) Resp(data interface{}) error { _ = "STUB: not implemented"; return nil }
+
+func (c *Controller) ServeJSON(encoding ...bool) error { _ = "STUB: not implemented"; return nil }
+
+func (c *Controller) ServeJSONP() error { _ = "STUB: not implemented"; return nil }
+
+func (c *Controller) ServeXML() error { _ = "STUB: not implemented"; return nil }
+
+func (c *Controller) ServeYAML() error { _ = "STUB: not implemented"; return nil }
+
+func (c *Controller) ServeFormatted(encoding ...bool) error { _ = "STUB: not implemented"; return nil }
+
+func (c *Controller) Input() (url.Values, error) {
+	_ = "STUB: not implemented"
+	return *new(url.Values), nil
+}
+
+func (c *Controller) ParseForm(obj interface{}) error { _ = "STUB: not implemented"; return nil }
+
+func (c *Controller) GetString(key string, def ...string) string {
+	_ = "STUB: not implemented"
+	return ""
+}
+
 func (c *Controller) GetStrings(key string, def ...[]string) []string {
-	var defv []string
-	if len(def) > 0 {
-		defv = def[0]
-	}
-
-	if f, err := c.Input(); f == nil || err != nil {
-		return defv
-	} else if vs := f[key]; len(vs) > 0 {
-		return vs
-	}
-
-	return defv
+	_ = "STUB: not implemented"
+	return nil
 }
 
-// GetInt returns input as an int or the default value while it's present and input is blank
 func (c *Controller) GetInt(key string, def ...int) (int, error) {
-	strv := c.Ctx.Input.Query(key)
-	if len(strv) == 0 && len(def) > 0 {
-		return def[0], nil
-	}
-	return strconv.Atoi(strv)
+	_ = "STUB: not implemented"
+	return 0, nil
 }
 
-// GetInt8 return input as an int8 or the default value while it's present and input is blank
 func (c *Controller) GetInt8(key string, def ...int8) (int8, error) {
-	strv := c.Ctx.Input.Query(key)
-	if len(strv) == 0 && len(def) > 0 {
-		return def[0], nil
-	}
-	i64, err := strconv.ParseInt(strv, 10, 8)
-	return int8(i64), err
+	_ = "STUB: not implemented"
+	return 0, nil
 }
 
-// GetUint8 return input as an uint8 or the default value while it's present and input is blank
 func (c *Controller) GetUint8(key string, def ...uint8) (uint8, error) {
-	strv := c.Ctx.Input.Query(key)
-	if len(strv) == 0 && len(def) > 0 {
-		return def[0], nil
-	}
-	u64, err := strconv.ParseUint(strv, 10, 8)
-	return uint8(u64), err
+	_ = "STUB: not implemented"
+	return 0, nil
 }
 
-// GetInt16 returns input as an int16 or the default value while it's present and input is blank
 func (c *Controller) GetInt16(key string, def ...int16) (int16, error) {
-	strv := c.Ctx.Input.Query(key)
-	if len(strv) == 0 && len(def) > 0 {
-		return def[0], nil
-	}
-	i64, err := strconv.ParseInt(strv, 10, 16)
-	return int16(i64), err
+	_ = "STUB: not implemented"
+	return 0, nil
 }
 
-// GetUint16 returns input as an uint16 or the default value while it's present and input is blank
 func (c *Controller) GetUint16(key string, def ...uint16) (uint16, error) {
-	strv := c.Ctx.Input.Query(key)
-	if len(strv) == 0 && len(def) > 0 {
-		return def[0], nil
-	}
-	u64, err := strconv.ParseUint(strv, 10, 16)
-	return uint16(u64), err
+	_ = "STUB: not implemented"
+	return 0, nil
 }
 
-// GetInt32 returns input as an int32 or the default value while it's present and input is blank
 func (c *Controller) GetInt32(key string, def ...int32) (int32, error) {
-	strv := c.Ctx.Input.Query(key)
-	if len(strv) == 0 && len(def) > 0 {
-		return def[0], nil
-	}
-	i64, err := strconv.ParseInt(strv, 10, 32)
-	return int32(i64), err
+	_ = "STUB: not implemented"
+	return 0, nil
 }
 
-// GetUint32 returns input as an uint32 or the default value while it's present and input is blank
 func (c *Controller) GetUint32(key string, def ...uint32) (uint32, error) {
-	strv := c.Ctx.Input.Query(key)
-	if len(strv) == 0 && len(def) > 0 {
-		return def[0], nil
-	}
-	u64, err := strconv.ParseUint(strv, 10, 32)
-	return uint32(u64), err
+	_ = "STUB: not implemented"
+	return 0, nil
 }
 
-// GetInt64 returns input value as int64 or the default value while it's present and input is blank.
 func (c *Controller) GetInt64(key string, def ...int64) (int64, error) {
-	strv := c.Ctx.Input.Query(key)
-	if len(strv) == 0 && len(def) > 0 {
-		return def[0], nil
-	}
-	return strconv.ParseInt(strv, 10, 64)
+	_ = "STUB: not implemented"
+	return 0, nil
 }
 
-// GetUint64 returns input value as uint64 or the default value while it's present and input is blank.
 func (c *Controller) GetUint64(key string, def ...uint64) (uint64, error) {
-	strv := c.Ctx.Input.Query(key)
-	if len(strv) == 0 && len(def) > 0 {
-		return def[0], nil
-	}
-	return strconv.ParseUint(strv, 10, 64)
+	_ = "STUB: not implemented"
+	return 0, nil
 }
 
-// GetBool returns input value as bool or the default value while it's present and input is blank.
 func (c *Controller) GetBool(key string, def ...bool) (bool, error) {
-	strv := c.Ctx.Input.Query(key)
-	if len(strv) == 0 && len(def) > 0 {
-		return def[0], nil
-	}
-	return strconv.ParseBool(strv)
+	_ = "STUB: not implemented"
+	return false, nil
 }
 
-// GetFloat returns input value as float64 or the default value while it's present and input is blank.
 func (c *Controller) GetFloat(key string, def ...float64) (float64, error) {
-	strv := c.Ctx.Input.Query(key)
-	if len(strv) == 0 && len(def) > 0 {
-		return def[0], nil
-	}
-	return strconv.ParseFloat(strv, 64)
+	_ = "STUB: not implemented"
+	return 0, nil
 }
 
-// GetFile returns the file data in file upload field named as key.
-// it returns the first one of multi-uploaded files.
 func (c *Controller) GetFile(key string) (multipart.File, *multipart.FileHeader, error) {
-	return c.Ctx.Request.FormFile(key)
+	_ = "STUB: not implemented"
+	return *new(multipart.File), nil, nil
 }
 
-// GetFiles return multi-upload files
-// files, err:=c.GetFiles("myfiles")
-//
-//	if err != nil {
-//		http.Error(w, err.Error(), http.StatusNoContent)
-//		return
-//	}
-//
-//	for i, _ := range files {
-//		//for each fileheader, get a handle to the actual file
-//		file, err := files[i].Open()
-//		defer file.Close()
-//		if err != nil {
-//			http.Error(w, err.Error(), http.StatusInternalServerError)
-//			return
-//		}
-//		//create destination file making sure the path is writeable.
-//		dst, err := os.Create("upload/" + files[i].Filename)
-//		defer dst.Close()
-//		if err != nil {
-//			http.Error(w, err.Error(), http.StatusInternalServerError)
-//			return
-//		}
-//		//copy the uploaded file to the destination file
-//		if _, err := io.Copy(dst, file); err != nil {
-//			http.Error(w, err.Error(), http.StatusInternalServerError)
-//			return
-//		}
-//	}
 func (c *Controller) GetFiles(key string) ([]*multipart.FileHeader, error) {
-	if files, ok := c.Ctx.Request.MultipartForm.File[key]; ok {
-		return files, nil
-	}
-	return nil, http.ErrMissingFile
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
-// SaveToFile saves uploaded file to new path.
-// it only operates the first one of mutil-upload form file field.
 func (c *Controller) SaveToFile(fromFile, toFile string) error {
-	buf := copyBufferPool.Get().([]byte)
-	defer copyBufferPool.Put(buf)
-	return c.SaveToFileWithBuffer(fromFile, toFile, buf)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 type onlyWriter struct {
@@ -682,126 +298,50 @@ type onlyWriter struct {
 }
 
 func (c *Controller) SaveToFileWithBuffer(fromFile string, toFile string, buf []byte) error {
-	src, _, err := c.Ctx.Request.FormFile(fromFile)
-	if err != nil {
-		return err
-	}
-	defer src.Close()
-
-	dst, err := os.OpenFile(toFile, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, filePerm)
-	if err != nil {
-		return err
-	}
-	defer dst.Close()
-
-	_, err = io.CopyBuffer(onlyWriter{dst}, src, buf)
-	if err != nil {
-		return err
-	}
-
-	err = c.Ctx.Request.MultipartForm.RemoveAll()
-	return err
-}
-
-// StartSession starts session and load old session data info this controller.
-func (c *Controller) StartSession() session.Store {
-	if c.CruSession == nil {
-		c.CruSession = c.Ctx.Input.CruSession
-	}
-	return c.CruSession
-}
-
-// SetSession puts value into session.
-func (c *Controller) SetSession(name interface{}, value interface{}) error {
-	if c.CruSession == nil {
-		c.StartSession()
-	}
-	return c.CruSession.Set(context2.Background(), name, value)
-}
-
-// GetSession gets value from session.
-func (c *Controller) GetSession(name interface{}) interface{} {
-	if c.CruSession == nil {
-		c.StartSession()
-	}
-	return c.CruSession.Get(context2.Background(), name)
-}
-
-// DelSession removes value from session.
-func (c *Controller) DelSession(name interface{}) error {
-	if c.CruSession == nil {
-		c.StartSession()
-	}
-	return c.CruSession.Delete(context2.Background(), name)
-}
-
-// SessionRegenerateID regenerates session id for this session.
-// the session data have no changes.
-func (c *Controller) SessionRegenerateID() error {
-	if c.CruSession != nil {
-		c.CruSession.SessionRelease(context2.Background(), c.Ctx.ResponseWriter)
-	}
-	var err error
-	c.CruSession, err = GlobalSessions.SessionRegenerateID(c.Ctx.ResponseWriter, c.Ctx.Request)
-	c.Ctx.Input.CruSession = c.CruSession
-	return err
-}
-
-// DestroySession cleans session data and session cookie.
-func (c *Controller) DestroySession() error {
-	err := c.Ctx.Input.CruSession.Flush(nil)
-	if err != nil {
-		return err
-	}
-	c.Ctx.Input.CruSession = nil
-	GlobalSessions.SessionDestroy(c.Ctx.ResponseWriter, c.Ctx.Request)
+	_ = "STUB: not implemented"
 	return nil
 }
 
-// IsAjax returns this request is ajax or not.
-func (c *Controller) IsAjax() bool {
-	return c.Ctx.Input.IsAjax()
+func (c *Controller) StartSession() session.Store {
+	_ = "STUB: not implemented"
+	return *new(session.Store)
 }
 
-// GetSecureCookie returns decoded cookie value from encoded browser cookie values.
+func (c *Controller) SetSession(name interface{}, value interface{}) error {
+	_ = "STUB: not implemented"
+	return nil
+}
+
+func (c *Controller) GetSession(name interface{}) interface{} {
+	_ = "STUB: not implemented"
+	return nil
+}
+
+func (c *Controller) DelSession(name interface{}) error { _ = "STUB: not implemented"; return nil }
+
+func (c *Controller) SessionRegenerateID() error { _ = "STUB: not implemented"; return nil }
+
+func (c *Controller) DestroySession() error { _ = "STUB: not implemented"; return nil }
+
+func (c *Controller) IsAjax() bool { _ = "STUB: not implemented"; return false }
+
 func (c *Controller) GetSecureCookie(Secret, key string) (string, bool) {
-	return c.Ctx.GetSecureCookie(Secret, key)
+	_ = "STUB: not implemented"
+	return "", false
 }
 
-// SetSecureCookie puts value into cookie after encoded the value.
 func (c *Controller) SetSecureCookie(Secret, name, value string, others ...interface{}) {
-	c.Ctx.SetSecureCookie(Secret, name, value, others...)
+	_ = "STUB: not implemented"
+	return
 }
 
-// XSRFToken creates a CSRF token string and returns.
-func (c *Controller) XSRFToken() string {
-	if c._xsrfToken == "" {
-		expire := int64(BConfig.WebConfig.XSRFExpire)
-		if c.XSRFExpire > 0 {
-			expire = int64(c.XSRFExpire)
-		}
-		c._xsrfToken = c.Ctx.XSRFToken(BConfig.WebConfig.XSRFKey, expire)
-	}
-	return c._xsrfToken
-}
+func (c *Controller) XSRFToken() string { _ = "STUB: not implemented"; return "" }
 
-// CheckXSRFCookie checks xsrf token in this request is valid or not.
-// the token can provided in request header "X-Xsrftoken" and "X-CsrfToken"
-// or in form field value named as "_xsrf".
-func (c *Controller) CheckXSRFCookie() bool {
-	if !c.EnableXSRF {
-		return true
-	}
-	return c.Ctx.CheckXSRFCookie()
-}
+func (c *Controller) CheckXSRFCookie() bool { _ = "STUB: not implemented"; return false }
 
-// XSRFFormHTML writes an input field contains xsrf token value.
-func (c *Controller) XSRFFormHTML() string {
-	return `<input type="hidden" name="_xsrf" value="` +
-		c.XSRFToken() + `" />`
-}
+func (c *Controller) XSRFFormHTML() string { _ = "STUB: not implemented"; return "" }
 
-// GetControllerAndAction gets the executing controller name and action name.
 func (c *Controller) GetControllerAndAction() (string, string) {
-	return c.controllerName, c.actionName
+	_ = "STUB: not implemented"
+	return "", ""
 }

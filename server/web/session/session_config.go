@@ -2,7 +2,6 @@ package session
 
 import "net/http"
 
-// ManagerConfig define the session config
 type ManagerConfig struct {
 	EnableSetCookie         bool          `json:"enableSetCookie,omitempty"`
 	DisableHTTPOnly         bool          `json:"disableHTTPOnly"`
@@ -21,123 +20,86 @@ type ManagerConfig struct {
 	CookieSameSite          http.SameSite `json:"cookieSameSite"`
 }
 
-func (c *ManagerConfig) Opts(opts ...ManagerConfigOpt) {
-	for _, opt := range opts {
-		opt(c)
-	}
-}
+func (c *ManagerConfig) Opts(opts ...ManagerConfigOpt) { _ = "STUB: not implemented"; return }
 
 type ManagerConfigOpt func(config *ManagerConfig)
 
 func NewManagerConfig(opts ...ManagerConfigOpt) *ManagerConfig {
-	config := &ManagerConfig{}
-	for _, opt := range opts {
-		opt(config)
-	}
-	return config
+	_ = "STUB: not implemented"
+	return nil
 }
 
-// CfgCookieName set key of session id
 func CfgCookieName(cookieName string) ManagerConfigOpt {
-	return func(config *ManagerConfig) {
-		config.CookieName = cookieName
-	}
+	_ = "STUB: not implemented"
+	return *new(ManagerConfigOpt)
 }
 
-// CfgSessionIdLength set len of session id
 func CfgSessionIdLength(length int64) ManagerConfigOpt {
-	return func(config *ManagerConfig) {
-		config.SessionIDLength = length
-	}
+	_ = "STUB: not implemented"
+	return *new(ManagerConfigOpt)
 }
 
-// CfgSessionIdPrefix set prefix of session id
 func CfgSessionIdPrefix(prefix string) ManagerConfigOpt {
-	return func(config *ManagerConfig) {
-		config.SessionIDPrefix = prefix
-	}
+	_ = "STUB: not implemented"
+	return *new(ManagerConfigOpt)
 }
 
-// CfgSetCookie whether set `Set-Cookie` header in HTTP response
 func CfgSetCookie(enable bool) ManagerConfigOpt {
-	return func(config *ManagerConfig) {
-		config.EnableSetCookie = enable
-	}
+	_ = "STUB: not implemented"
+	return *new(ManagerConfigOpt)
 }
 
-// CfgGcLifeTime set session gc lift time
 func CfgGcLifeTime(lifeTime int64) ManagerConfigOpt {
-	return func(config *ManagerConfig) {
-		config.Gclifetime = lifeTime
-	}
+	_ = "STUB: not implemented"
+	return *new(ManagerConfigOpt)
 }
 
-// CfgMaxLifeTime set session lift time
 func CfgMaxLifeTime(lifeTime int64) ManagerConfigOpt {
-	return func(config *ManagerConfig) {
-		config.Maxlifetime = lifeTime
-	}
+	_ = "STUB: not implemented"
+	return *new(ManagerConfigOpt)
 }
 
-// CfgCookieLifeTime set cookie lift time
 func CfgCookieLifeTime(lifeTime int) ManagerConfigOpt {
-	return func(config *ManagerConfig) {
-		config.CookieLifeTime = lifeTime
-	}
+	_ = "STUB: not implemented"
+	return *new(ManagerConfigOpt)
 }
 
-// CfgProviderConfig configure session provider
 func CfgProviderConfig(providerConfig string) ManagerConfigOpt {
-	return func(config *ManagerConfig) {
-		config.ProviderConfig = providerConfig
-	}
+	_ = "STUB: not implemented"
+	return *new(ManagerConfigOpt)
 }
 
-// CfgDomain set cookie domain
 func CfgDomain(domain string) ManagerConfigOpt {
-	return func(config *ManagerConfig) {
-		config.Domain = domain
-	}
+	_ = "STUB: not implemented"
+	return *new(ManagerConfigOpt)
 }
 
-// CfgSessionIdInHTTPHeader enable session id in http header
 func CfgSessionIdInHTTPHeader(enable bool) ManagerConfigOpt {
-	return func(config *ManagerConfig) {
-		config.EnableSidInHTTPHeader = enable
-	}
+	_ = "STUB: not implemented"
+	return *new(ManagerConfigOpt)
 }
 
-// CfgSetSessionNameInHTTPHeader set key of session id in http header
 func CfgSetSessionNameInHTTPHeader(name string) ManagerConfigOpt {
-	return func(config *ManagerConfig) {
-		config.SessionNameInHTTPHeader = name
-	}
+	_ = "STUB: not implemented"
+	return *new(ManagerConfigOpt)
 }
 
-// EnableSidInURLQuery enable session id in query string
 func CfgEnableSidInURLQuery(enable bool) ManagerConfigOpt {
-	return func(config *ManagerConfig) {
-		config.EnableSidInURLQuery = enable
-	}
+	_ = "STUB: not implemented"
+	return *new(ManagerConfigOpt)
 }
 
-// DisableHTTPOnly set HTTPOnly for http.Cookie
 func CfgHTTPOnly(HTTPOnly bool) ManagerConfigOpt {
-	return func(config *ManagerConfig) {
-		config.DisableHTTPOnly = !HTTPOnly
-	}
+	_ = "STUB: not implemented"
+	return *new(ManagerConfigOpt)
 }
 
-// CfgSecure set Secure for http.Cookie
 func CfgSecure(Enable bool) ManagerConfigOpt {
-	return func(config *ManagerConfig) {
-		config.Secure = Enable
-	}
+	_ = "STUB: not implemented"
+	return *new(ManagerConfigOpt)
 }
 
-// CfgSameSite set http.SameSite
 func CfgSameSite(sameSite http.SameSite) ManagerConfigOpt {
-	return func(config *ManagerConfig) {
-		config.CookieSameSite = sameSite
-	}
+	_ = "STUB: not implemented"
+	return *new(ManagerConfigOpt)
 }

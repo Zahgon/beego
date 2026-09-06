@@ -1,22 +1,6 @@
-// Copyright 2020 beego
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-// http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
 package mock
 
 import (
-	"context"
-
 	"github.com/beego/beego/v2/client/orm"
 )
 
@@ -35,37 +19,15 @@ type OrmStub struct {
 	ms []*Mock
 }
 
-func StartMock() Stub {
-	return stub
-}
+func StartMock() Stub { _ = "STUB: not implemented"; return *new(Stub) }
 
-func newOrmStub() *OrmStub {
-	return &OrmStub{
-		ms: make([]*Mock, 0, 4),
-	}
-}
+func newOrmStub() *OrmStub { _ = "STUB: not implemented"; return nil }
 
-func (o *OrmStub) Mock(m *Mock) {
-	o.ms = append(o.ms, m)
-}
+func (o *OrmStub) Mock(m *Mock) { _ = "STUB: not implemented"; return }
 
-func (o *OrmStub) Clear() {
-	o.ms = make([]*Mock, 0, 4)
-}
+func (o *OrmStub) Clear() { _ = "STUB: not implemented"; return }
 
 func (o *OrmStub) FilterChain(next orm.Filter) orm.Filter {
-	return func(ctx context.Context, inv *orm.Invocation) []interface{} {
-		ms := mockFromCtx(ctx)
-		ms = append(ms, o.ms...)
-
-		for _, mock := range ms {
-			if mock.cond.Match(ctx, inv) {
-				if mock.cb != nil {
-					mock.cb(inv)
-				}
-				return mock.resp
-			}
-		}
-		return next(ctx, inv)
-	}
+	_ = "STUB: not implemented"
+	return *new(orm.Filter)
 }

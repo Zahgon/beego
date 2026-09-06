@@ -1,13 +1,10 @@
 package alils
 
 const (
-	version         = "0.6.0"     // SDK version
-	signatureMethod = "hmac-sha1" // Signature method
+	version         = "0.6.0"
+	signatureMethod = "hmac-sha1"
 
-	// OffsetNewest is the log head offset, i.e. the offset that will be
-	// assigned to the next message that will be produced to the shard.
 	OffsetNewest = "end"
-	// OffsetOldest is the oldest offset available on the logstore for a
-	// shard.
+
 	OffsetOldest = "begin"
 )

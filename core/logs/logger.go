@@ -1,22 +1,7 @@
-// Copyright 2014 beego Author. All Rights Reserved.
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//      http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
 package logs
 
 import (
 	"io"
-	"runtime"
 	"sync"
 	"time"
 )
@@ -26,17 +11,9 @@ type logWriter struct {
 	writer io.Writer
 }
 
-func newLogWriter(wr io.Writer) *logWriter {
-	return &logWriter{writer: wr}
-}
+func newLogWriter(wr io.Writer) *logWriter { _ = "STUB: not implemented"; return nil }
 
-func (lg *logWriter) writeln(msg string) (int, error) {
-	lg.Lock()
-	msg += "\n"
-	n, err := lg.writer.Write([]byte(msg))
-	lg.Unlock()
-	return n, err
-}
+func (lg *logWriter) writeln(msg string) (int, error) { _ = "STUB: not implemented"; return 0, nil }
 
 const (
 	y1  = `0123456789`
@@ -57,39 +34,8 @@ const (
 )
 
 func formatTimeHeader(when time.Time) ([]byte, int, int) {
-	y, mo, d := when.Date()
-	h, mi, s := when.Clock()
-	ns := when.Nanosecond() / 1000000
-	// len("2006/01/02 15:04:05.123 ")==24
-	var buf [24]byte
-
-	buf[0] = y1[y/1000%10]
-	buf[1] = y2[y/100]
-	buf[2] = y3[y-y/100*100]
-	buf[3] = y4[y-y/100*100]
-	buf[4] = '/'
-	buf[5] = mo1[mo-1]
-	buf[6] = mo2[mo-1]
-	buf[7] = '/'
-	buf[8] = d1[d-1]
-	buf[9] = d2[d-1]
-	buf[10] = ' '
-	buf[11] = h1[h]
-	buf[12] = h2[h]
-	buf[13] = ':'
-	buf[14] = mi1[mi]
-	buf[15] = mi2[mi]
-	buf[16] = ':'
-	buf[17] = s1[s]
-	buf[18] = s2[s]
-	buf[19] = '.'
-	buf[20] = ns1[ns/100]
-	buf[21] = ns1[ns%100/10]
-	buf[22] = ns1[ns%10]
-
-	buf[23] = ' '
-
-	return buf[0:], d, h
+	_ = "STUB: not implemented"
+	return nil, 0, 0
 }
 
 var (
@@ -117,62 +63,10 @@ var (
 	colorMap map[string]string
 )
 
-func initColor() {
-	if runtime.GOOS == "windows" {
-		green = w32Green
-		white = w32White
-		yellow = w32Yellow
-		red = w32Red
-		blue = w32Blue
-		magenta = w32Magenta
-		cyan = w32Cyan
-	}
-	colorMap = map[string]string{
-		// by color
-		"green":  green,
-		"white":  white,
-		"yellow": yellow,
-		"red":    red,
-		// by method
-		"GET":     blue,
-		"POST":    cyan,
-		"PUT":     yellow,
-		"DELETE":  red,
-		"PATCH":   green,
-		"HEAD":    magenta,
-		"OPTIONS": white,
-	}
-}
+func initColor() { _ = "STUB: not implemented"; return }
 
-// ColorByStatus return color by http code
-// 2xx return Green
-// 3xx return White
-// 4xx return Yellow
-// 5xx return Red
-func ColorByStatus(code int) string {
-	once.Do(initColor)
-	switch {
-	case code >= 200 && code < 300:
-		return colorMap["green"]
-	case code >= 300 && code < 400:
-		return colorMap["white"]
-	case code >= 400 && code < 500:
-		return colorMap["yellow"]
-	default:
-		return colorMap["red"]
-	}
-}
+func ColorByStatus(code int) string { _ = "STUB: not implemented"; return "" }
 
-// ColorByMethod return color by http code
-func ColorByMethod(method string) string {
-	once.Do(initColor)
-	if c := colorMap[method]; c != "" {
-		return c
-	}
-	return reset
-}
+func ColorByMethod(method string) string { _ = "STUB: not implemented"; return "" }
 
-// ResetColor return reset color
-func ResetColor() string {
-	return reset
-}
+func ResetColor() string { _ = "STUB: not implemented"; return "" }

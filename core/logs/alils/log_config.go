@@ -1,6 +1,5 @@
 package alils
 
-// InputDetail defines log detail
 type InputDetail struct {
 	LogType       string   `json:"logType"`
 	LogPath       string   `json:"logPath"`
@@ -15,13 +14,11 @@ type InputDetail struct {
 	TopicFormat   string   `json:"topicFormat"`
 }
 
-// OutputDetail defines the output detail
 type OutputDetail struct {
 	Endpoint     string `json:"endpoint"`
 	LogStoreName string `json:"logstoreName"`
 }
 
-// LogConfig defines Log Config
 type LogConfig struct {
 	Name         string       `json:"configName"`
 	InputType    string       `json:"inputType"`
@@ -35,8 +32,7 @@ type LogConfig struct {
 	project *LogProject
 }
 
-// GetAppliedMachineGroup returns applied machine group of this config.
 func (c *LogConfig) GetAppliedMachineGroup(confName string) (groupNames []string, err error) {
-	groupNames, err = c.project.GetAppliedMachineGroups(c.Name)
-	return
+	_ = "STUB: not implemented"
+	return nil, nil
 }
